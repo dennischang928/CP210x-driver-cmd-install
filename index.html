@@ -108,6 +108,18 @@
         margin-top: 14px;
       }
 
+      .platform {
+        margin-top: 20px;
+      }
+
+      .platform h3 {
+        margin: 0 0 8px;
+      }
+
+      .platform .download {
+        margin-top: 10px;
+      }
+
       a {
         color: #0f5faa;
       }
@@ -134,15 +146,18 @@
   <body>
     <main class="panel">
       <h1>CP210x Installer</h1>
-      <p class="subtitle">One command for installing CP210x driver on Windows.</p>
+      <p class="subtitle">One command installer for Windows and macOS.</p>
+
+      <section class="platform" aria-label="Windows installer">
+      <h2>Windows</h2>
 
       <div class="command-box">
-        <code>iwr driver.sengchon.com/install.ps1 | iex</code>
-        <button onclick="copyCommand()">Copy Command</button>
+        <code id="winCommand">iwr driver.sengchon.com/install.ps1 | iex</code>
+        <button onclick="copyCommand('winCommand', 'Windows command copied. Paste it into PowerShell.')">Copy Command</button>
       </div>
       <p id="copyStatus" aria-live="polite"></p>
 
-      <h2>Instructions</h2>
+      <h3>Instructions</h3>
       <ol>
         <li>Open PowerShell on Windows.</li>
         <li>Copy the command above.</li>
@@ -151,15 +166,38 @@
       </ol>
 
       <p class="download"><a href="/install.ps1">Download the PowerShell script</a></p>
+      </section>
+
+      <section class="platform" aria-label="macOS installer">
+      <h2>macOS</h2>
+
+      <div class="command-box">
+        <code id="macCommand">curl -fsSL driver.sengchon.com/install-mac.sh | bash</code>
+        <button onclick="copyCommand('macCommand', 'macOS command copied. Paste it into Terminal.')">Copy Command</button>
+      </div>
+      <p id="macCopyStatus" aria-live="polite"></p>
+
+      <h3>Instructions</h3>
+      <ol>
+        <li>Open Terminal on macOS.</li>
+        <li>Copy the command above.</li>
+        <li>Paste it into Terminal and press Enter.</li>
+        <li>Installed!</li>
+      </ol>
+
+      <p class="download"><a href="/install-mac.sh">Download the macOS script</a></p>
+      </section>
     </main>
 
     <script>
-      function copyCommand() {
-        const command = "iwr driver.sengchon.com/install.ps1 | iex";
-        const status = document.getElementById("copyStatus");
+      function copyCommand(commandId, message) {
+        const command = document.getElementById(commandId).textContent;
+        const status = commandId === "winCommand"
+          ? document.getElementById("copyStatus")
+          : document.getElementById("macCopyStatus");
 
         navigator.clipboard.writeText(command).then(() => {
-          status.textContent = "Command copied. Paste it into PowerShell.";
+          status.textContent = message;
         }).catch(() => {
           status.textContent = "Clipboard access failed. Copy the command manually.";
         });
