@@ -18,9 +18,13 @@ fi
 
 workdir="$(mktemp -d)"
 mounted_dmg=""
+mount_point=""
 cleanup() {
-  if [[ -n "$mounted_dmg" ]]; then
-    hdiutil detach "$mounted_dmg" >/dev/null 2>&1 || true
+  if [[ -n "$mount_point" && -d "$mount_point" ]]; then
+    # Prefer detaching by the known mount path; force as a fallback to avoid stale mounts.
+    hdiutil detach "$mount_point" >/dev/null 2>&1 || hdiutil detach -force "$mount_point" >/dev/null 2>&1 || true
+  elif [[ -n "$mounted_dmg" ]]; then
+    hdiutil detach "$mounted_dmg" >/dev/null 2>&1 || hdiutil detach -force "$mounted_dmg" >/dev/null 2>&1 || true
   fi
   rm -rf "$workdir"
 }
