@@ -17,7 +17,11 @@ if ! command -v unzip >/dev/null 2>&1; then
 fi
 
 workdir="$(mktemp -d)"
+mounted_dmg=""
 cleanup() {
+  if [[ -n "$mounted_dmg" ]]; then
+    hdiutil detach "$mounted_dmg" >/dev/null 2>&1 || true
+  fi
   rm -rf "$workdir"
 }
 trap cleanup EXIT
@@ -36,7 +40,26 @@ unzip -q "$zip_path" -d "$extract_dir"
 pkg_path="$(find "$extract_dir" -type f -name "*.pkg" | head -n 1)"
 
 if [[ -z "$pkg_path" ]]; then
-  echo "No .pkg installer found in downloaded archive."
+  dmg_path="$(find "$extract_dir" -type f -name "*.dmg" | head -n 1)"
+
+  if [[ -n "$dmg_path" ]]; then
+    mount_point="$workdir/mnt"
+    mkdir -p "$mount_point"
+
+    echo "Mounting disk image..."
+    hdiutil_output="$(hdiutil attach -nobrowse -readonly -mountpoint "$mount_point" "$dmg_path")"
+    mounted_dmg="$(printf '%s\n' "$hdiutil_output" | awk '/Apple_HFS|APFS/ {print $NF}' | head -n 1)"
+
+    if [[ -z "$mounted_dmg" ]]; then
+      mounted_dmg="$mount_point"
+    fi
+
+    pkg_path="$(find "$mount_point" -type f -name "*.pkg" | head -n 1)"
+  fi
+fi
+
+if [[ -z "$pkg_path" ]]; then
+  echo "No .pkg installer found in downloaded archive or mounted disk image."
   exit 1
 fi
 
