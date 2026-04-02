@@ -2,10 +2,168 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CP210x Installer</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap");
+
+      :root {
+        --bg-start: #f4f8ff;
+        --bg-end: #e8f4ec;
+        --card: #ffffff;
+        --ink: #13212f;
+        --ink-muted: #4c6176;
+        --line: #d4e0ec;
+        --accent: #0f766e;
+        --accent-hover: #115e59;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Space Grotesk", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: radial-gradient(1200px 600px at 85% -10%, #ccead2 0%, transparent 65%),
+          linear-gradient(145deg, var(--bg-start), var(--bg-end));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .panel {
+        width: min(720px, 100%);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 24px 50px rgba(19, 33, 47, 0.12);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 3vw, 2.3rem);
+        line-height: 1.1;
+      }
+
+      .subtitle {
+        margin-top: 10px;
+        margin-bottom: 0;
+        color: var(--ink-muted);
+      }
+
+      .command-box {
+        margin: 20px 0 14px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #f9fcff;
+        font-family: "IBM Plex Mono", monospace;
+        gap: 10px;
+        flex-wrap: wrap;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .command-box code {
+        flex: 1;
+        overflow-wrap: anywhere;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 16px;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 600;
+        font-family: "Space Grotesk", "Segoe UI", sans-serif;
+        cursor: pointer;
+        transition: background-color 160ms ease;
+      }
+
+      button:hover {
+        background: var(--accent-hover);
+      }
+
+      h2 {
+        margin-bottom: 8px;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 8px 0;
+      }
+
+      .download {
+        margin-top: 14px;
+      }
+
+      a {
+        color: #0f5faa;
+      }
+
+      #copyStatus {
+        min-height: 20px;
+        margin: 0;
+        color: var(--ink-muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 640px) {
+        .panel {
+          padding: 20px;
+          border-radius: 16px;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>CP210x Installer</h1>
-    <p><a href="/install.ps1">Download the PowerShell script</a></p>
+    <main class="panel">
+      <h1>CP210x Installer</h1>
+      <p class="subtitle">One command for installing CP210x driver on Windows.</p>
+
+      <div class="command-box">
+        <code>iwr driver.sengchon.com/install.ps1 | iex</code>
+        <button onclick="copyCommand()">Copy Command</button>
+      </div>
+      <p id="copyStatus" aria-live="polite"></p>
+
+      <h2>Instructions</h2>
+      <ol>
+        <li>Open PowerShell on Windows.</li>
+        <li>Copy the command above.</li>
+        <li>Paste it into PowerShell and press Enter.</li>
+        <li>Installed!</li>
+      </ol>
+
+      <p class="download"><a href="/install.ps1">Download the PowerShell script</a></p>
+    </main>
+
+    <script>
+      function copyCommand() {
+        const command = "iwr driver.sengchon.com/install.ps1 | iex";
+        const status = document.getElementById("copyStatus");
+
+        navigator.clipboard.writeText(command).then(() => {
+          status.textContent = "Command copied. Paste it into PowerShell.";
+        }).catch(() => {
+          status.textContent = "Clipboard access failed. Copy the command manually.";
+        });
+      }
+    </script>
   </body>
 </html>
