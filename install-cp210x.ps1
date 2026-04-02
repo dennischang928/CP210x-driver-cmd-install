@@ -12,4 +12,4 @@ if ([Environment]::Is64BitOperatingSystem) {
     $exe = Join-Path $dir "CP210xVCPInstaller_x86.exe"
 }
 
-Start-Process $exe -Verb RunAs -Wait
+Start-Process $exe -ArgumentList '/Q','/SE' -Verb RunAs -Wait
