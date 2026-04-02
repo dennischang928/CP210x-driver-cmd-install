@@ -2,6 +2,6 @@
   publish = "."
 
 [[headers]]
-  for = "/install-cp210x.ps1"
+  for = "/install.ps1"
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
