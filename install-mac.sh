@@ -68,6 +68,7 @@ if [[ -z "$pkg_path" ]]; then
 fi
 
 echo "Installing package (administrator password may be required)..."
+echo "When prompted, type in your password. The password will not be shown as you type - this is normal. Just type and press enter."
 sudo installer -pkg "$pkg_path" -target /
 
 echo "CP210x macOS driver installation completed."
